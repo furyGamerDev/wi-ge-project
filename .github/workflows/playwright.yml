@@ -1,0 +1,45 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Executar Playwright
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        browser: [chromium]
+
+    steps:
+      - name: Pega o codigo
+        uses: actions/checkout@v4
+
+      - name: Instalação node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Instalar browsers do Playwright
+        run: npx playwright install --with-deps
+
+      - name: Executar testes no ${{ matrix.browser }} (headed via Xvfb)
+        run: |
+                xvfb-run -s "-screen 0 1920x1080x24" \
+                npx playwright test \
+                --project=${{ matrix.browser }} \
+                --reporter=list,html
+        continue-on-error: false
+
+      - name: Upload de relatório HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: playwright-report/

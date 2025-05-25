@@ -137,7 +137,7 @@ jobs:
 Funcionalidade: Navegação e exibição de notícias
 
 Contexto:
-    **Dado** que o usuário acessa a página inicial do ge.globo.com
+      Dado que o usuário acessa a página inicial do ge.globo.com
 
 Cenário: Página inicial exibe no mínimo 10 notícias
       Quando a página for carregada completamente
